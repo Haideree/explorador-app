@@ -8,13 +8,22 @@ function Countries() {
 
     async function loadCountries() {
 
-      const response = await fetch(
-        "https://restcountries.com/v3.1/all"
-      );
+      try {
 
-      const data = await response.json();
+        const response = await fetch(
+          "https://restcountries.com/v3.1/all?fields=name,flags,cca3"
+        );
 
-      setCountries(data.slice(0, 10));
+        const data = await response.json();
+
+        setCountries(data.slice(0, 10));
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
     }
 
     loadCountries();
@@ -22,16 +31,45 @@ function Countries() {
   }, []);
 
   return (
+
     <div>
+
       <h2>Países</h2>
 
-      {countries.map((country) => (
-        <p key={country.cca3}>
-          {country.name.common}
-        </p>
-      ))}
+      {countries.length === 0 ? (
+        <p>Cargando países...</p>
+      ) : (
+
+        countries.map((country) => (
+
+          <div
+            key={country.cca3}
+            style={{
+              background: "white",
+              marginBottom: "15px",
+              padding: "10px",
+              borderRadius: "10px"
+            }}
+          >
+
+            <img
+              src={country.flags.png}
+              alt={country.name.common}
+              width="80"
+            />
+
+            <h3>{country.name.common}</h3>
+
+          </div>
+
+        ))
+
+      )}
+
     </div>
+
   );
+
 }
 
 export default Countries;
